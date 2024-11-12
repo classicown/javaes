@@ -2,81 +2,51 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question avec Réponses</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            text-align: center;
-            width: 300px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-        .answers label {
-            display: block;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            color: white;
-            background-color: #4CAF50;
-            border-radius: 5px;
-        }
-    </style>
+    <title>Formulaire Question 1</title>
+    <link rel="stylesheet" href="questiontheme1.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Question :</h2>
-        <p>Quelle(s) réponse(s) est/sont correcte(s) ?</p>
+    <form id="questionForm" action="http://127.0.0.1:5000/resultat" method="POST" onsubmit="return verifierReponses()">
+        <label for="reponse1">Réponse 1</label>
+        <input type="checkbox" id="reponse1" name="reponse1" value="Oui"><br>
         
-        <div class="answers">
-            <label><input type="checkbox" value="1"> Réponse 1</label>
-            <label><input type="checkbox" value="2"> Réponse 2</label>
-            <label><input type="checkbox" value="3"> Réponse 3</label>
-            <label><input type="checkbox" value="4"> Réponse 4</label>
-        </div>
+        <label for="reponse2">Réponse 2</label>
+        <input type="checkbox" id="reponse2" name="reponse2" value="Oui"><br>
+
+        <label for="reponse3">Réponse 3</label>
+        <input type="checkbox" id="reponse3" name="reponse3" value="Oui"><br>
+
+        <label for="reponse4">Réponse 4</label>
+        <input type="checkbox" id="reponse4" name="reponse4" value="Oui"><br>
+
+        <button type="submit">Soumettre</button>
         
-        <button class="button" onclick="verifierReponses()">Vérifier</button>
-        
-        <p id="resultat"></p>
-    </div>
+        <p id="resultat"></p> <!-- Zone pour afficher le résultat -->
+    </form>
 
     <script>
         function verifierReponses() {
-            // Sélectionne tous les checkbox cochés
-            const reponsesCochees = document.querySelectorAll('.answers input[type="checkbox"]:checked');
-            
-            // Récupère les valeurs des réponses cochées
-            const valeursCochees = Array.from(reponsesCochees).map(input => input.value);
-            
-            // Réponses correctes
-            const bonnesReponses = ["1", "2"];
-            
-            // Vérifie si les réponses sélectionnées sont exactement les bonnes réponses
-            const estCorrect = valeursCochees.length === bonnesReponses.length &&
-                               valeursCochees.every(val => bonnesReponses.includes(val));
+            // Récupère les cases cochées
+            const reponses = [
+                document.getElementById('reponse1').checked,
+                document.getElementById('reponse2').checked,
+                document.getElementById('reponse3').checked,
+                document.getElementById('reponse4').checked
+            ];
 
-            const resultat = document.getElementById("resultat");
+            // Réponses correctes: les deux premières doivent être cochées, les autres non
+            const estCorrect = reponses[0] && reponses[1] && !reponses[2] && !reponses[3];
             
+            const resultat = document.getElementById("resultat");
+
             if (estCorrect) {
                 resultat.textContent = "Bonne réponse !";
                 resultat.style.color = "green";
+                return true; // Permet le submit du formulaire
             } else {
                 resultat.textContent = "Mauvaise réponse. Réessayez.";
                 resultat.style.color = "red";
+                return false; // Empêche le submit du formulaire
             }
         }
     </script>
